@@ -1,13 +1,13 @@
-## Skeleton for Node apps
+# Smart Eye
 
-Meant for rapid prototyping.
+Turn your old Android Device into a Security Camera
 
-### How to use
+## Architecture
 
-`git clone git@github.com:themattman/node-skeleton.git`
+### Android App
 
-`cd node-skeleton`
+Takes video and streams it to a remote server.
 
-`npm install`
+### Node.js Server
 
-`node server`
+Runs in the cloud and streams video to web clients (mobile and desktop).
