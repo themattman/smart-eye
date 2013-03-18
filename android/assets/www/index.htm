@@ -50,7 +50,7 @@
 	<object id="xvlcv" width="640px" height="480px" classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921">
 	  <param name="toolbar" value="false" />
 	</object>
-	<div id="fullscreen"><a>Fullscreen</a></div>
+	<div id="fullscreen" style="display: none;"><a>Fullscreen</a></div>
       </div>
 
       <div id="right-bar">
@@ -59,7 +59,7 @@
 	<div class="accordion">
 	  
 	  <!-- Section 1 -->
-	  <div class="section" id="quality">
+	  <div class="section" id="quality" style="display:none">
 	    <div class="title"><h1>Change quality settings</h1></div>
 	    <div class="section-content">
 
@@ -145,9 +145,9 @@
 
 	  <!-- Section 2 -->
 	  <div class="section" id="flash">
-	    <div class="title"><h1>Toggle flash</h1></div>
+	    <div class="title" id="torch-button"><h1>Toggle light</h1></div>
 	    <div class="section-content">
-	      <img id="torch-button" src="images/lamp.png" alt="Lamp" width="128px" height="128px"></img>
+	     
 	      <span id="torch-desc">Click on the torch to enable or disable the flash</span>
 	df     <input type="hidden" id="flashEnabled" value="0"></input>
 	    </div>
@@ -155,7 +155,7 @@
 
 	  <!-- Section 3 -->
 	  <div class="section" id="cameras">
-	    <div class="title"><h1>Switch between cameras</h1></div>
+	    <div class="title"><h1>Toggle cameras</h1></div>
 	    <div class="section-content">
 	      <span data-id="back">Back facing camera</span>
 	      <span data-id="front" class="camera-not-selected">Front facing camera</span>
@@ -163,6 +163,9 @@
 	      <input type="hidden" id="cameraId" value="0"></input>
 	    </div>
 	  </div> <!-- Section 3 -->
+	  <div class="section" id="connect">
+	  	<div class="title"><div><h1>Connect</h1></div></div>
+	  </div>
 
 	  <!-- Section 4 -->
 	  <div style="display:none;"class="section selected" id="sounds">
@@ -172,7 +175,7 @@
 
 	</div> <!-- Accordion -->
 
-	<div id="need-help"><span>Show some tips</span></div>
+	<div id="need-help" style="display:none; visibility: hidden;"><span>Show some tips</span></div>
 
       </div>
 
@@ -225,7 +228,7 @@
     <div id="glass"></div>
 
     <footer>
-      <div id="connect"><div><h1>Connect !!</h1></div></div>
+      
       <div id="status-container"><span>STATUS</span> : <span id="status">NOT CONNECTED</span></div>
     </footer>
     

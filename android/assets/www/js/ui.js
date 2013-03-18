@@ -60,7 +60,7 @@
 	         },
 
 	         start: function () {
-		          if (!object.playlist.isPlaying) {
+		          if (object.playlist && !object.playlist.isPlaying) {
 		              starting = true;
 		              error = false;
 		              startTimer = setInterval(function () {
@@ -76,7 +76,9 @@
 		              var item = generateURI(host,type);
 		              object.playlist.add(type==='video'?item.uriv:item.uria,'',item.params);
 		              object.playlist.playItem(0);
-		          }
+              } else if (!object.playlist) {
+              	alert("Can't start the stream, are you sure you've installed the plugin?");
+              }
 	         },
 
 	         stop: function () {
@@ -99,7 +101,7 @@
 	         getState: function() {
 		          if (restarting) return 'restarting';
 		          else if (starting) return 'starting'
-		          else if (object.playlist.isPlaying) return 'streaming';
+		          else if (object.playlist && object.playlist.isPlaying) return 'streaming';
 		          else if (error) return 'error';
 		          else return 'idle';
 	         },
@@ -166,8 +168,9 @@
 	     // Test if the mozilla plugin is installed
 	     if (typeof $('#vlca')[0].playlist == "undefined") {
 	         // Plugin not detected, alert user !
-	         $('#glass').fadeIn(1000);
-	         $('#error-noplugin').fadeIn(1000);
+	         //$('#glass').fadeIn(1000);
+	         //$('#error-noplugin').fadeIn(1000);
+           alert("Need to install the VLC plugin.");
 	         return 0;
 	     } else {
 	         return 2;
@@ -176,15 +179,7 @@
     },
 
     loadSoundsList = function (sounds) {
-	     var list = $('#soundslist'), category, name;
-	     sounds.forEach(function (e) {
-	         category = e.match(/([a-z0-9]+)_/)[1];
-	         name = e.match(/[a-z0-9]+_([a-z0-9_]+)/)[1];
-	         if ($('.category.'+category).length==0) list.append(
-                '<div class="category '+category+'"><span class="category-name">'+category+'</span><div class="category-separator"></div></div>'
-            );
-	         $('.category.'+category).append('<div class="sound" id="'+e+'"><a>'+name.replace(/_/g,' ')+'</a></div>');
-	     });
+	     // Do nothing
     },
 
     testScreenState = function (screenState) {
@@ -246,7 +241,7 @@
 		          cover.html('').css('background','url("images/speaker.png") center no-repeat').show();
 	         } else if (audioStream.getState()==='idle') {
 		          videoPlugin.css('visibility','hidden'); 
-		          cover.html('').css('background','url("images/eye.png") center no-repeat').show();
+		          cover.html('').css('background','#222').show();
 	         }
 	     }
 
@@ -381,10 +376,8 @@
 	         disableAndEnable($(this));
 	         if ($('#flashEnabled').val()=='0') {
 		          $('#flashEnabled').val('1');
-		          $(this).addClass('torch-on');
 	         } else {
 		          $('#flashEnabled').val('0');
-		          $(this).removeClass('torch-on');
 	         }
 	         if (videoStream.getState()==='streaming') videoStream.restart();
 	     });
