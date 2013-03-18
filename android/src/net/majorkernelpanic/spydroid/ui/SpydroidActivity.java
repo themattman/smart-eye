@@ -178,8 +178,8 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 		public Fragment getItem(int i) {
 			if (device == HANDSET) {
 				switch (i) {
-				case 0: return new HandsetFragment();
-				case 1: return new PreviewFragment();
+				case 1: return new HandsetFragment();
+				case 0: return new PreviewFragment();
 				}
 			} else {
 				switch (i) {
@@ -196,7 +196,7 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 
 		public HandsetFragment getHandsetFragment() {
 			if (device == HANDSET) {
-				return (HandsetFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.handset_pager+":0");
+				return (HandsetFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.handset_pager+":1");
 			} else {
 				return (HandsetFragment) getSupportFragmentManager().findFragmentById(R.id.handset);
 			}
@@ -204,7 +204,7 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 
 		public PreviewFragment getPreviewFragment() {
 			if (device == HANDSET) {
-				return (PreviewFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.handset_pager+":1");
+				return (PreviewFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:"+R.id.handset_pager+":0");
 			} else {
 				return (PreviewFragment) getSupportFragmentManager().findFragmentById(R.id.preview);
 			}
@@ -214,8 +214,8 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 		public CharSequence getPageTitle(int position) {
 			if (device == HANDSET) {
 				switch (position) {
-				case 0: return getString(R.string.page0);
-				case 1: return getString(R.string.page1);
+				case 1: return getString(R.string.page0);
+				case 0: return getString(R.string.page1);
 				}        		
 			} else {
 				switch (position) {

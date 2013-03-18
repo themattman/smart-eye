@@ -60,7 +60,6 @@ public class HandsetFragment extends Fragment {
     	View rootView = inflater.inflate(R.layout.main,container,false);
         mLine1 = (TextView)rootView.findViewById(R.id.line1);
         mLine2 = (TextView)rootView.findViewById(R.id.line2);
-        mVersion = (TextView)rootView.findViewById(R.id.version);
         mSignWifi = (TextView)rootView.findViewById(R.id.advice);
         mSignStreaming = (TextView)rootView.findViewById(R.id.streaming);
         mSignInformation = (LinearLayout)rootView.findViewById(R.id.information);
@@ -72,14 +71,6 @@ public class HandsetFragment extends Fragment {
 	@Override
     public void onStart() {
     	super.onStart();
-    	
-    	// Print version number
-    	Context mContext = SpydroidApplication.getContext();
-        try {
-			mVersion.setText("v"+mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0 ).versionName);
-		} catch (Exception e) {
-			mVersion.setText("v???");
-		}
     	
     	displayIpAddress();
     	
