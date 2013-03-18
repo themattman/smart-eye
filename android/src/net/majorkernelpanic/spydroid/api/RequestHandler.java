@@ -115,30 +115,9 @@ public class RequestHandler {
 	static private void exec(JSONObject object, StringBuilder response) throws JSONException, IllegalArgumentException, IllegalAccessException {
 		String action = object.getString("action");
 		
-		// Returns a list of available sounds on the phone
-		if (action.equals("sounds")) {
-			Field[] raws = R.raw.class.getFields();
-			response.append("[");
-			for(int i=0; i < raws.length-1; i++) {
-				response.append("\""+raws[i].getName() + "\",");
-			}
-			response.append("\""+raws[raws.length-1].getName() + "\"]");
-		}
-		
 		// Returns the screen state (whether the app. is on the foreground or not)
-		else if (action.equals("screen")) {
+		if (action.equals("screen")) {
 			response.append(SpydroidActivity.activityPaused ? "\"1\"" : "\"0\"");
-		}
-		
-		// Plays a sound on the phone
-		else if (action.equals("play")) {
-			Field[] raws = R.raw.class.getFields();
-			for(int i=0; i < raws.length; i++) {
-				if (raws[i].getName().equals(object.getString("name"))) {
-					mSoundPool.load(SpydroidApplication.getContext(), raws[i].getInt(null), 0);
-				}
-			}
-			response.append("[]");
 		}
 		
 		// Returns Spydroid's configuration (framerate, bitrate...)

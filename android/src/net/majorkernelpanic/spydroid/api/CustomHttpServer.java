@@ -60,7 +60,6 @@ public class CustomHttpServer extends HttpServer {
 
 		private Context mContext;
 		private Handler mHandler;
-		private Field[] mRaws = R.raw.class.getFields();
 		
 		public CustomRequestHandler(Context context, Handler handler) {
 			mHandler = handler;
