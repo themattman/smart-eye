@@ -20,29 +20,17 @@
 
 package net.majorkernelpanic.spydroid;
 
-import static org.acra.ReportField.ANDROID_VERSION;
-import static org.acra.ReportField.APP_VERSION_NAME;
-import static org.acra.ReportField.BRAND;
-import static org.acra.ReportField.DEVICE_FEATURES;
-import static org.acra.ReportField.LOGCAT;
-import static org.acra.ReportField.PHONE_MODEL;
-import static org.acra.ReportField.PRODUCT;
-import static org.acra.ReportField.SHARED_PREFERENCES;
-import static org.acra.ReportField.STACK_TRACE;
-import static org.acra.ReportField.USER_APP_START_DATE;
-import static org.acra.ReportField.USER_CRASH_DATE;
+
 import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionManager;
 import net.majorkernelpanic.streaming.video.H264Stream;
 import net.majorkernelpanic.streaming.video.VideoQuality;
 
-import org.acra.annotation.ReportsCrashes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-@ReportsCrashes(formKey = "dGhWbUlacEV6X0hlS2xqcmhyYzNrWlE6MQ", customReportContent = { APP_VERSION_NAME, PHONE_MODEL, BRAND, PRODUCT, ANDROID_VERSION, STACK_TRACE, USER_APP_START_DATE, USER_CRASH_DATE, LOGCAT, DEVICE_FEATURES, SHARED_PREFERENCES })
 public class SpydroidApplication extends android.app.Application {
 
 	/** Default listening port for the RTSP server. **/
@@ -58,7 +46,7 @@ public class SpydroidApplication extends android.app.Application {
 	public static int sAudioEncoder = Session.AUDIO_AMRNB;
 
 	/** By default H.263 is the video encoder **/
-	public static int sVideoEncoder = Session.VIDEO_H263;
+	public static int sVideoEncoder = Session.VIDEO_H264;
 
 	/** Set this flag to true to disable the ads **/
 	public final static boolean DONATE_VERSION = false;

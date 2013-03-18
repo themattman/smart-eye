@@ -154,10 +154,7 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 			}
 		});
 
-		// Remove the ads if this is the donate version of the app.
-		if (SpydroidApplication.DONATE_VERSION) {
-			((LinearLayout)findViewById(R.id.adcontainer)).removeAllViews();
-		}
+
 
 		// Prevents the phone to go to sleep mode
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -183,12 +180,10 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 				switch (i) {
 				case 0: return new HandsetFragment();
 				case 1: return new PreviewFragment();
-				case 2: return new AboutFragment();
 				}
 			} else {
 				switch (i) {
 				case 0: return new TabletFragment();
-				case 1: return new AboutFragment();
 				}        		
 			}
 			return null;
@@ -196,7 +191,7 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 
 		@Override
 		public int getCount() {
-			return device==HANDSET ? 3 : 2;
+			return device==HANDSET ? 2 : 1;
 		}
 
 		public HandsetFragment getHandsetFragment() {
@@ -221,12 +216,10 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 				switch (position) {
 				case 0: return getString(R.string.page0);
 				case 1: return getString(R.string.page1);
-				case 2: return getString(R.string.page2);
 				}        		
 			} else {
 				switch (position) {
 				case 0: return getString(R.string.page0);
-				case 1: return getString(R.string.page2);
 				}
 			}
 			return null;
