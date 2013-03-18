@@ -382,12 +382,10 @@
 	         if (videoStream.getState()==='streaming') videoStream.restart();
 	     });
 
-	     $('.camera-not-selected').live('click',function () {
+	     $('#togCam').click(function () {
 	         if ($(this).attr('disabled')!==undefined || videoStream.getState()==='starting') return;
-	         $('#cameras span').addClass('camera-not-selected');
-	         $(this).removeClass('camera-not-selected');
 	         disableAndEnable($('.camera-not-selected'));
-	         $('#cameraId').val($(this).attr('data-id'));
+           $('#cameraId').val($('#cameraId').val() == "front" ? "back" : "front");
 	         if (videoStream.getState()==='streaming') videoStream.restart();
 	     }) 
 	     
