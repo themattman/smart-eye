@@ -3,9 +3,9 @@ import cv
 import sys
 import os
 import socket
+import getopt
 #import httplib2
 
- 
 HAAR_CASCADE_PATH = "/opt/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"
 CAMERA_INDEX = 0
  
@@ -19,33 +19,56 @@ def detect_faces(image):
  
 if __name__ == "__main__":
     print os.getppid()
-    #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #resp, content = httplib2.Http().request("http://example.com/foo/bar")
+    args = getopt.getopt(sys.argv[1:], 'x:y:')
+    print args[1][0]
     cv.NamedWindow("Video", cv.CV_WINDOW_AUTOSIZE)
  
     #capture = cv.CaptureFromCAM(CAMERA_INDEX)
-    capture = cv.CaptureFromFile('/Users/mattman/Downloads/IMG_0288.MOV')
+    #capture = cv.CaptureFromFile('/Users/mattman/Downloads/IMG_0288.MOV')
+
+    '''
+    while True:
+        cv.GrabFrame(video)
+        frame = cv.RetrieveFrame(video)
+        cv.ShowImage("IP Camera", frame)
+        cv.WaitKey(50)
+    '''
+
+    print args[1][0]
+    try: capture = cv.CaptureFromFile(args[1][0])
+    except: print 'Error: File won\'t open.'
+    print args[1][0]
+    if not capture:
+        raise Exception('Error: File won\'t open.')
     storage = cv.CreateMemStorage()
     cascade = cv.Load(HAAR_CASCADE_PATH)
     faces = []
  
     nFrames = int(  cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FRAME_COUNT ) )
     fps = cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FPS )
+    if fps <= 0:
+        raise Exception('Error: FPS is negative.')
     waitPerFrameInMillisec = int( 1/fps * 1000/1 )
+    print 'wait = ', waitPerFrameInMillisec
 
     print 'Num. Frames = ', nFrames
     print 'Frame Rate = ', fps, ' frames per sec'
 
     i = 0
     while True:
-        capture = cv.CaptureFromFile('/Users/mattman/Downloads/IMG_0288.MOV')
+        #capture = cv.CaptureFromFile('/Users/mattman/Downloads/IMG_0288.MOV')
+        #capture = cv.CaptureFromFile(args[1][0])
         for f in xrange( nFrames ):
-            frameImg = cv.QueryFrame( capture )
+            cv.GrabFrame(capture)
+            frameImg = cv.RetrieveFrame(capture)
+
+            #frameImg = cv.QueryFrame( capture )
             #cv.ShowImage('both', cv.fromarray(frameImg.array(da[::2,::2,::-1])))
             cv.ShowImage( "My Video Window",  frameImg )
             cv.WaitKey( waitPerFrameInMillisec  )
 
-            if i%3==0 and frameImg is not None:
+
+            if i%10==0 and frameImg is not None:
                 print type(frameImg)
                 faces = detect_faces(frameImg)
                 face_list = faces
