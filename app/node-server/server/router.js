@@ -1,5 +1,10 @@
 var mongo = require('./database.js')
-  , email = require('./email.js');
+  , email = require('./email.js')
+  , stream = require('stream')
+  , fs = require('fs')
+  , rstream = fs.createReadStream(__dirname + '/../public/test.txt')
+  , buf = new Buffer(64)
+;
 
 /*mongo.connect(function(msg) {
   if(msg == null)
@@ -28,15 +33,40 @@ exports.index = function(req, res){
   res.render('index', { title: 'Matt Kneiser' });
 };
 
-// email test
-exports.email = function(req, res){
-  email.send({ 
-    name: "Matt", 
-    email: "mattman@umich.edu"
-  } 
-  // templates defined in /server/email/
-  ,'template.jade', function(msg) { 
-    console.log(msg);
-    res.send(msg);
-  });
+exports.view = function(req, res){
+  console.log(req.headers);
+  res.render('view', { 'title': 'Matt Kneiser' });
 };
+
+exports.stream = function(req, res){
+  if(req.method === "GET"){
+    /*if(buf.length > 0){
+      console.log('success');
+      //res.pipe(buf);
+    } else {
+      console.log('failzorz');
+    }*/
+    rstream.pipe(res);
+    rstream.on('end', function(){
+      res.end();
+      console.log('dun');
+    })
+  } else if(req.method === "POST") {
+    /*console.log('stream');
+    console.log(req.body);
+    res.send(req.body);
+    req.pipe(buf);*/
+    //stream.on('data')
+  }
+};
+
+
+
+
+
+
+
+
+
+
+

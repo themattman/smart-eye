@@ -1,0 +1,11 @@
+extends layout
+
+block append content
+  h1= title
+  p Welcome to #{title}
+  #stream
+
+
+block append scripts
+  script
+    $.get('./stream', function(d){console.log('begin-data');console.log(d)});
