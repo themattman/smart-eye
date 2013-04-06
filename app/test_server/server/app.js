@@ -20,7 +20,8 @@ config(app);
 // ---------------------------------------------------------- //
 // GET
 app.get('/',                    router.index);
-app.get('/stream/:stream_name', router.stream)
+app.get('/stream/:stream_name', router.stream);
+app.get('/register/:name',      router.register);
 // ---------------------------------------------------------- //
 // ---------------------------------------------------------- //
 
@@ -32,5 +33,5 @@ var httpApp = http.createServer(app).listen(app.get('port'), function(){
     console.log('Intervalling...', new Date());
 
     // Send REQ's to the other server
-  }, 5000);
+  }, 15000);
 });
