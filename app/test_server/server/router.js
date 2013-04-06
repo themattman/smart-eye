@@ -17,10 +17,11 @@ exports.index = function(req, res){
 };
 
 exports.stream = function(req, res){
+  console.log(req.connection.remoteAddress)
   var name = req.params.name || req.params.stream_name
   if(name){
     var cmd = "/opt/local/bin/python2.7 ~/Development/face/magnum/recog.py";
-    //cmd += (" " + name) || ""; //Different for name
+    cmd += (" rtsp://" + req.connection.remoteAddress + ':8086') || ""; //Different for name
     console.log('[', cmd, ']')
     child = exec(cmd , puts);
     streams[name] = child.pid;
