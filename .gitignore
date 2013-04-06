@@ -1,4 +1,5 @@
 *~
 *.DS_Store
-node_modules/*
-public/img/*
+node_modules
+public/img
+app/RTSP-Streaming.js
