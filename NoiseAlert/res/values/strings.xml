@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NoiseAlert</string>
+    <string name="action_settings">Settings</string>
+    <string name="start">Start</string>
+    <string name="sound_level">Sound Level</string>
+    <string name="empty_string"></string>
+    <string name="zero">0</string>
+
+</resources>
