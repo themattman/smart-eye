@@ -94,6 +94,8 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.spydroid);
+        startService(new Intent(this, ListenerService.class));
+
 
 		// Restores some settings 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
