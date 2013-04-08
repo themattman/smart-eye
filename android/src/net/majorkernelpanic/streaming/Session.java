@@ -319,6 +319,7 @@ public class Session {
 	/** Stops existing streams. */
 	public void stopAll() {
 		synchronized (sLock) {
+            Log.d("Session", "Stopping all.");
 			for (int i=0;i<mStreamList.length;i++) {
 				if (mStreamList[i] != null && mStreamList[i].isStreaming()) {
 					mStreamList[i].stop();
@@ -331,6 +332,7 @@ public class Session {
 	/** Deletes all existing tracks & release associated resources. */
 	public void flush() {
 		synchronized (sLock) {
+            Log.d("Session", "Flushing session.");
 			for (int i=0;i<mStreamList.length;i++) {
 				if (mStreamList[i] != null) {
 					mStreamList[i].release();
