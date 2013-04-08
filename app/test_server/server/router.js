@@ -17,26 +17,39 @@ exports.index = function(req, res){
 };
 
 exports.stream = function(req, res){
-  //console.log(req.connection.remoteAddress)
-  var name = req.params.name || req.params.stream_name
-  if(name){
-    var cmd = "/opt/local/bin/python2.7 ~/Development/face/magnum/recog.py";
-    //cmd += (" rtsp://" + req.connection.remoteAddress + ':8086') || ""; //Different for name
-    //cmd += " /Users/mattman/Downloads/IMG_0288.MOV";
-    //cmd += (" rtsp://" + '67.194.201.130' + ':8086') || "/Users/mattman/Downloads/IMG_0288.MOV"; //Different for name
-    cmd += (" rtsp://" + '67.194.194.115' + ':8086') || "/Users/mattman/Downloads/IMG_0288.MOV"; //Different for name
-    console.log('[', cmd, ']')
-    child = exec(cmd , puts);
-    streams[name] = child.pid;
-    console.log(streams)
+  if(req.method == 'POST'){
+    console.log(req.body);
+    console.log('ip =', req.body['ip']);
+    console.log('port =', req.body['port']);
+    //console.log(req.connection.remoteAddress)
+    var name = req.params.name || req.params.stream_name
+    if(name){
+      console.log('stream');
+      console.log(streams[name]);
+      if(!streams[name]){
+        console.log('not streams[name]')
+        streams[name] = req.body;
+        var cmd = "/opt/local/bin/python2.7 ~/Development/face/magnum/recog.py";
+        cmd += " rtsp://" + req.body['ip'] + ':' + req.body['port'];
+        console.log('[', cmd, ']')
+        child = exec(cmd , puts);
+        streams[name].pid = child.pid;
+        console.log(streams)
+      }
+    }else{
+      console.log('Bad request: no stream name given')
+    }
   }else{
-    console.log('Bad request: no stream name given')
+    console.log('GET /STREAM/:ID')
+    res.render('index', { 'title': (child.pid || 'bad') });
   }
-
-  res.render('index', { 'title': (child.pid || 'bad') });
 };
 
 exports.register = function(req, res){
   console.log('register', req.params.name)
   res.render('index', { 'title': req.params.name });
+};
+
+exports.trigger = function(req, res){
+  console.log('TRIGGER FOUND -', req.params.id);
 };

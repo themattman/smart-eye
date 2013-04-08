@@ -52,23 +52,20 @@ if __name__ == "__main__":
     cascade = cv.Load(HAAR_CASCADE_PATH)
     faces = []
  
-    nFrames = int( cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FRAME_COUNT ) )
-    fps = cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FPS )
-    if fps <= 0:
-        raise Exception('Error: FPS is negative.')
-    waitPerFrameInMillisec = int( 1/fps * 1000/1 )
+    #nFrames = int( cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FRAME_COUNT ) )
+    #fps = cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FPS )
+    #if fps <= 0:
+    #raise Exception('Error: FPS is negative.')
+    #waitPerFrameInMillisec = int( 1/fps * 1000/1 )
 
-    print 'wait = ', waitPerFrameInMillisec
-    print 'Num. Frames = ', nFrames
-    print 'Frame Rate = ', fps, ' frames per sec'
+    #print 'wait = ', waitPerFrameInMillisec
+    #print 'Num. Frames = ', nFrames
+    #print 'Frame Rate = ', fps, ' frames per sec'
 
     i = 0
     while True:
-        #for f in xrange( nFrames ):
         cv.GrabFrame(capture)
         frameImg = cv.RetrieveFrame(capture)
-
-        #frameImg = cv.QueryFrame( capture )
 
         if i%10==0 and frameImg is not None:
             print type(frameImg)
@@ -83,30 +80,10 @@ if __name__ == "__main__":
             cv.Rectangle(frameImg, (x,y), (x+w,y+h), 255)
  
         cv.ShowImage("w1", frameImg)
-        #cv.WaitKey( waitPerFrameInMillisec )
         cv.WaitKey( 50 )
+        if i > 1000:
+            cv.DestroyWindow( "My Video Window" )
+            sys.exit()
         i += 1
 
-
-    # When playing is done, delete the window
-    #  NOTE: this step is not strictly necessary, 
-    #         when the script terminates it will close all windows it owns anyways
     cv.DestroyWindow( "My Video Window" )
-
-    #i = 0
-    #while True:
-        #image = cv.QueryFrame(capture)
- 
-        # Only run the Detection algorithm every 10 frames to improve performance
-        #if i%10==0:
-        #    faces = detect_faces(image)
-        #    face_list = faces
-        #    if len(faces) > 0:
-        #        sys.stdout.write("Num faces detected = %d [%d]\n" % (len(faces), i))
-        #        sys.stdout.flush()
- 
-        #for (x,y,w,h) in faces:
-        #    cv.Rectangle(image, (x,y), (x+w,y+h), 255)
- 
-        #cv.ShowImage("w1", image)
-        #i += 1
