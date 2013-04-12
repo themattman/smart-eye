@@ -1,2 +1,2 @@
 // Server root
-require('./server/app.js');
+require('./server/router.js');

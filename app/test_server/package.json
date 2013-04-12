@@ -11,6 +11,9 @@
     "jade": "*",
     "less-middleware": "*",
     "mongodb": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "socket.io": "*",
+    "passport": "*",
+    "passport-http": "*"
   }
 }

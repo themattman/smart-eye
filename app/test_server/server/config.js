@@ -1,6 +1,8 @@
 var express = require('express')
 //  , secret  = require('./secret.js')
-  , path    = require('path');
+  , path    = require('path')
+  , passport = require('passport')
+;
 
 module.exports = function configure(app) {
   app.configure(function(){
@@ -13,11 +15,12 @@ module.exports = function configure(app) {
     app.use(app.router);
     app.use(require('less-middleware')({ src: __dirname + '/../public' }));
     app.use(express.static(path.join(__dirname, '/../public')));
+    app.use(passport.initialize());
     
     // required password for admins
-    app.use('/admin', express.basicAuth(function(user, pass){
+    /*app.use('/admin', express.basicAuth(function(user, pass){
       return 'user' == user & 'pass' == pass;
-    }));
+    }));*/
   });
 
   app.configure('development', function(){
