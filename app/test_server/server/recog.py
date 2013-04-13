@@ -5,61 +5,48 @@ import os
 import socket
 import getopt
 import smtplib
-#from email.mime.type import MIMEtext
+
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from email.MIMEImage import MIMEImage
 
+# For OpenCV
 HAAR_CASCADE_PATH = "/opt/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml"
 CAMERA_INDEX = 0
 
+# For Email
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_USERNAME = "smart.eye.team@gmail.com"
+SMTP_PASSWORD = "hillshire4farms"
+
+EMAIL_FROM = "the.smarteye.team@gmail.com"
+EMAIL_SUBJECT = "Intrusion Alert!!"
+
+DATE_FORMAT = "%d/%m/%Y"
+EMAIL_SPACE = ", "
+
+DATA = "This is an auto-generated email from the SmartEye Android App. An intruder was detected."
+
 def email_user(email_address, frameImg):
-    #Get SMTP server working
-    LOGIN = 'elkoyadotcom@gmail.com'
-    PASSWORD = 'js5w10up8'
-    TO = 'mattknize@gmail.com'
-    FROM = 'elkoyadotcom@gmail.com'
-    print 'email_user()'
-    '''
-    msg = MIMEMultipart('related')
-    strFrom = 'security@smartEyeCamera.com'
-    strTo = email_address
-    msg['Subject'] = 'Security Camera Tripped!'
-    msg['From'] = strFrom
-    msg['To'] = strTo
-    '''
+    msg = MIMEMultipart(DATA)
+    file_name = "lolz.jpg"
 
-    LOGIN    = FROM
-    TOADDRS  = ["mattman@umich.edu"]
-    SUBJECT  = "Testing!!!"
+    fp = open(file_name, 'rb')
+    img = MIMEImage(fp.read())
+    fp.close()
+    msg.attach(img)
 
-    msg = ("From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n"
-           % (FROM, ", ".join(TOADDRS), SUBJECT) )
-    msg += "some text\r\n"
+    msg.attach(MIMEText(DATA, 'plain'))
 
-    # Get the image
-    #fp = open(frameImg, 'rb')
-    #msgImage = MIMEImage(fp.read())
-    #fp.close()
-    #msg.attach(msgImage)
-    print 'Img attached'
-
-    #s = smtplib.SMTP('localhost')
-    #s = smtplib.SMTP('smtp.mattkneiser.com', 25)
-    #s = smtplib.SMTP('mail.which.net', 25)
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.set_debuglevel(1)
-    server.ehlo()
-    server.starttls()
-    server.login(LOGIN, PASSWORD)
-    try:
-        failed = s.sendmail(FROM, TOADDRS, msg.as_string())
-        s.close()
-    except Exception, e:
-        errorMsg = "Unable to send email. Error: %s" % str(e)
-    #s.connect(smtp.mattkneiser.com, 25)
-    #s.sendmail(strFrom, strTo, msg.as_string())
-    #s.quit()
+    msg['Subject'] = EMAIL_SUBJECT
+    msg['To'] = EMAIL_SPACE.join(email_address)
+    msg['From'] = EMAIL_FROM
+    mail = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+    mail.starttls()
+    mail.login(SMTP_USERNAME, SMTP_PASSWORD)
+    mail.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
+    mail.quit()
     print 'Email sent!'
 
 def contact_server():
@@ -79,19 +66,11 @@ def detect_faces(image):
     return faces
  
 if __name__ == "__main__":
-    print os.getppid()
-    email_user('mattman@umich.edu', '/Users/mattman/Desktop/f.jpg')
-    sys.exit()
-    '''
-    print os.getppid()
-    print os.getpid()
     args = getopt.getopt(sys.argv[1:], 'x:y:')
     cv.NamedWindow("Video", cv.CV_WINDOW_AUTOSIZE)
  
     #capture = cv.CaptureFromCAM(CAMERA_INDEX)
-    #capture = cv.CaptureFromFile('/Users/mattman/Downloads/IMG_0288.MOV')
 
-    
     while True:
         cv.GrabFrame(video)
         frame = cv.RetrieveFrame(video)
@@ -102,7 +81,6 @@ if __name__ == "__main__":
     #print args[1][0]
     try: capture = cv.CaptureFromFile(args[1][0])
     except: print 'Error: File won\'t open.'
-    #print args[1][0]
     if not capture:
         raise Exception('Error: File won\'t open.')
 
@@ -110,16 +88,6 @@ if __name__ == "__main__":
     cascade = cv.Load(HAAR_CASCADE_PATH)
     faces = []
  
-    #nFrames = int( cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FRAME_COUNT ) )
-    #fps = cv.GetCaptureProperty( capture, cv.CV_CAP_PROP_FPS )
-    #if fps <= 0:
-    #raise Exception('Error: FPS is negative.')
-    #waitPerFrameInMillisec = int( 1/fps * 1000/1 )
-
-    #print 'wait = ', waitPerFrameInMillisec
-    #print 'Num. Frames = ', nFrames
-    #print 'Frame Rate = ', fps, ' frames per sec'
-
     i = 0
     while True:
         cv.GrabFrame(capture)
@@ -159,4 +127,3 @@ if __name__ == "__main__":
 
 
 # USE FAKE GMAIL ACCOUNT
-'''
