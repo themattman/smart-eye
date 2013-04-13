@@ -41,7 +41,7 @@ SMTP_PORT = 587
 SMTP_USERNAME = "smart.eye.team@gmail.com"
 SMTP_PASSWORD = "hillshire4farms"
 
-EMAIL_TO = ["mattman@umich.edu", "jackwink@umich.edu", "kunyu@umich.edu"]
+#EMAIL_TO = ["mattman@umich.edu", "jackwink@umich.edu", "kunyu@umich.edu"]
 EMAIL_FROM = "the.smarteye.team@gmail.com"
 EMAIL_SUBJECT = "Meeting Tomorrow (Sent via Python ^_^)"
 
@@ -53,12 +53,14 @@ DATA='Welp, guess this script is working. Jack and I are good to meet at 2 tomor
 def send_email():
     #msg = MIMEText(DATA)
     msg = MIMEMultipart(DATA)
+    '''
     file_name = "/Users/mattman/Pictures/mhacks.jpg"
 
     fp = open(file_name, 'rb')
     img = MIMEImage(fp.read())
     fp.close()
     msg.attach(img)
+    '''
 
     msg.attach(MIMEText(DATA, 'plain'))
 

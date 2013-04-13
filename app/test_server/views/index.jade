@@ -3,3 +3,8 @@ extends layout
 block append content
   h1= title
   p Welcome to #{title}
+  img(id='stream', src=MJPGsrc, style="width:600px;height:600px;")
+  script
+    setInterval(function(){
+      $('#stream').attr('src', $('#stream').attr('src'));
+    }, 800);

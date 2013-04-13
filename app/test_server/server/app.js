@@ -21,6 +21,7 @@ config(app);
 // GET
 app.get('/',                    router.index);
 app.all('/stream/:stream_name', router.stream);
+app.get('/feed/:fname',         router.feed);
 app.get('/register/:name',      router.register);
 app.get('/trigger/:id',         router.trigger);
 // ---------------------------------------------------------- //

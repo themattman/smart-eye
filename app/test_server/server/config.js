@@ -4,6 +4,18 @@ var express = require('express')
   , passport = require('passport')
 ;
 
+
+var allowedDomains = ['smarteye.kunyuchen.com']
+
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', allowedDomains);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
+
 module.exports = function configure(app) {
   app.configure(function(){
     app.set('port', process.env.PORT || 3000);
@@ -16,6 +28,7 @@ module.exports = function configure(app) {
     app.use(require('less-middleware')({ src: __dirname + '/../public' }));
     app.use(express.static(path.join(__dirname, '/../public')));
     app.use(passport.initialize());
+    app.use(allowCrossDomain);
     
     // required password for admins
     /*app.use('/admin', express.basicAuth(function(user, pass){
