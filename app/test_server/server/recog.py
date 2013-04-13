@@ -28,9 +28,11 @@ EMAIL_SPACE = ", "
 
 DATA = "This is an auto-generated email from the SmartEye Android App. An intruder was detected."
 
-def email_user(email_address, frameImg):
+def email_user(email_address, file_name):
     msg = MIMEMultipart(DATA)
-    file_name = "lolz.jpg"
+    print 'email_address'
+    print email_address
+    print type(email_address)
 
     fp = open(file_name, 'rb')
     img = MIMEImage(fp.read())
@@ -42,11 +44,13 @@ def email_user(email_address, frameImg):
     msg['Subject'] = EMAIL_SUBJECT
     msg['To'] = EMAIL_SPACE.join(email_address)
     msg['From'] = EMAIL_FROM
+
     mail = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
     mail.starttls()
     mail.login(SMTP_USERNAME, SMTP_PASSWORD)
-    mail.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
+    mail.sendmail(EMAIL_FROM, email_address, msg.as_string())
     mail.quit()
+    
     print 'Email sent!'
 
 def contact_server():
@@ -66,16 +70,23 @@ def detect_faces(image):
     return faces
  
 if __name__ == "__main__":
+    print "Starting!"
     args = getopt.getopt(sys.argv[1:], 'x:y:')
+    if len(args[1]) < 2:
+        raise Exception('Error: No email addresses specified.')
+    #print args[1][1:]
+    #sys.exit()
     cv.NamedWindow("Video", cv.CV_WINDOW_AUTOSIZE)
  
     #capture = cv.CaptureFromCAM(CAMERA_INDEX)
 
+    '''
     while True:
         cv.GrabFrame(video)
         frame = cv.RetrieveFrame(video)
         cv.ShowImage("IP Camera", frame)
         cv.WaitKey(50)
+    '''
 
 
     #print args[1][0]
@@ -93,22 +104,27 @@ if __name__ == "__main__":
         cv.GrabFrame(capture)
         frameImg = cv.RetrieveFrame(capture)
 
-        if i%10==0 and frameImg is not None:
+        if i%5==0 and frameImg is not None:
             #print type(frameImg)
             faces = detect_faces(frameImg)
+            for (x,y,w,h) in faces:
+                cv.Rectangle(frameImg, (x,y), (x+w,y+h), 255)
             face_list = faces
             if len(faces) > 0:
+                cv.SaveImage('frameImg2.png', frameImg)
                 sys.stdout.write("Num faces detected = %d [%d]\n" % (len(faces), i))
                 sys.stdout.flush()
-                contact_server()
-                email_user('mattman@umich.edu', frameImg)
+                #contact_server()
+                print os.path.dirname(os.path.realpath(__file__))
+                email_user(args[1][1:], '/Users/mattman/Development/Web/nodeFun/smart-eye/app/test_server/frameImg2.png')
+                sys.exit()
  
-        for (x,y,w,h) in faces:
-            cv.Rectangle(frameImg, (x,y), (x+w,y+h), 255)
+        #for (x,y,w,h) in faces:
+            #cv.Rectangle(frameImg, (x,y), (x+w,y+h), 255)
  
         cv.ShowImage("w1", frameImg)
         cv.WaitKey( 50 )
-        if i > 100:
+        if i > 600:
             cv.DestroyWindow( "My Video Window" )
             sys.exit()
         i += 1
